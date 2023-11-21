@@ -14,14 +14,14 @@ st.set_page_config(
 )
 kakao_ad_code1 = """
  <ins class="kakao_ad_area" style="display:none;"
-data-ad-unit = "DAN-sSbpQDd6RXKtBOHw"
+data-ad-unit = "DAN-1ygiN7CoxyoZKd4X"
 data-ad-width = "250"
 data-ad-height = "250"></ins>
 <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
 """
 kakao_ad_code2 = """
  <ins class="kakao_ad_area" style="display:none;"
-data-ad-unit = "DAN-SdcWhppbpnLmiYIX"
+data-ad-unit = "DAN-8C0tMmtzAzgVLIeO"
 data-ad-width = "250"
 data-ad-height = "250"></ins>
 <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
