@@ -47,6 +47,7 @@ def main():
     # 파일 업로드 섹션 디자인
 	st.subheader('인공지능이 당신의 MBTI를 분석해줄거에요!:sunglasses:')
 	st.write(':blue[얼굴 정면 사진을 업로드 해주세요! 사진은 저장되지 않습니다!]')
+	st.info('AI MBTI와 실제 MBTI 간에는 차이가 있을 수 있습니다!')
     # 파일 업로드 컴포넌트
 	uploaded_file = st.file_uploader("PNG 또는 JPG 이미지를 업로드하세요.", type=["png", "jpg", "jpeg"])
 	if uploaded_file is not None:
