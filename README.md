@@ -3,7 +3,7 @@
 [![Python](https://img.shields.io/badge/Python-3.7%2B-blue)](https://www.python.org/downloads/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.0%2B-FF4B4B)](https://streamlit.io/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.5%2B-green)](https://opencv.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-1.9%2B-EE4C2C)](https://pytorch.org/)
+[![Tensorflow](https://img.shields.io/badge/Tensorflow-2.0%2B-EE4C2C)](https://www.tensorflow.org/)
 
 인공지능을 활용하여 당신의 외모 점수를 예측하는 재미있는 웹 애플리케이션입니다!
 
