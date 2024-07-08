@@ -5,6 +5,7 @@ from PIL import Image,ImageDraw,ImageOps
 from keras.models import load_model
 import mediapipe as mp
 import time
+import base64
 st.set_page_config(
     page_title="나의 MBTI는?",
     page_icon="face_favicon.png",
@@ -12,24 +13,63 @@ st.set_page_config(
         'About': "나의 mbti는?\nThis is an cool app!"
     }
 )
-kakao_ad_code1 = """
- <ins class="kakao_ad_area" style="display:none;"
-data-ad-unit = "DAN-1ygiN7CoxyoZKd4X"
-data-ad-width = "250"
-data-ad-height = "250"></ins>
-<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+bg_image_base64 = get_base64_of_bin_file('background.jpg')
+st.markdown("""
+<style>
+    .reportview-container {
+        background: linear-gradient(to right, #4e54c8, #8f94fb);
+        color: white;
+    }
+    .sidebar .sidebar-content {
+        background: linear-gradient(to bottom, #4e54c8, #8f94fb);
+        color: white;
+    }
+    h1 {
+    	color: white;
+        text-align: center;
+        font-size: 3em;
+    }
+    .stButton>button {
+        color: #4e54c8;
+        background-color: #f9d71c;
+        border: 2px solid #4e54c8;
+    }
+    .stTextInput>div>div>input {
+        color: #4e54c8;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+page_bg_img = f"""
+<style>
+[data-testid="stAppViewContainer"] > .main {{
+background-image: url("data:image/jpg;base64,{bg_image_base64}");
+background-size: cover;
+background-position: center center;
+background-repeat: no-repeat;
+background-attachment: fixed;
+}}
+
+[data-testid="stHeader"] {{
+background: rgba(0,0,0,0);
+}}
+
+[data-testid="stSidebar"] {{
+background: rgba(0,0,0,0);
+}}
+
+[data-testid="stFooter"] {{
+background: rgba(0,0,0,0);
+}}
+</style>
 """
-kakao_ad_code2 = """
- <ins class="kakao_ad_area" style="display:none;"
-data-ad-unit = "DAN-8C0tMmtzAzgVLIeO"
-data-ad-width = "250"
-data-ad-height = "250"></ins>
-<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
-"""
-coupang_ad_code="""
-<iframe src="https://ads-partners.coupang.com/widgets.html?id=718831&template=carousel&trackingCode=AF3660738&subId=&width=680&height=140&tsource=" width="680" height="140" frameborder="0" scrolling="no" referrerpolicy="unsafe-url"></iframe>
-<style>margin: 0 auto;</style>
-"""
+
+st.markdown(page_bg_img, unsafe_allow_html=True)
 @st.cache_resource
 def get_model():
 	model=load_model('keras_model.h5',compile=False)
@@ -42,13 +82,17 @@ mp_face_detection = mp.solutions.face_detection
 drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1,color=(0,255,0))
 def main():
 	model,class_names=get_model()
-	st.title("_나의 MBTI는_?:cupid:")
+	st.title(" 나의 MBTI는? ")
     
-    # 파일 업로드 섹션 디자인
-	st.subheader('인공지능이 당신의 MBTI를 분석해줄거에요!:sunglasses:')
-	st.write(':blue[얼굴 정면 사진을 업로드 해주세요! 사진은 저장되지 않습니다!]')
-	st.info('AI MBTI와 실제 MBTI 간에는 차이가 있을 수 있습니다!')
-    # 파일 업로드 컴포넌트
+	st.sidebar.image("logo.png", use_column_width=True)
+    
+	st.sidebar.header("About MBTI")
+	st.sidebar.info("MBTI란 심리검사로, 개인의 성향을 16가지의 유형으로 분류합니다. 'Myers-Briggs Type Indicator'의 약자로, 개인의 성격, 행동, 선호도 등을 파악하는 데 사용됩니다. 이를 통해 개인이 정보를 인식하고 결정을 내리는 방식, 에너지 소비 방식, 생활 방식 등을 이해할 수 있습니다.하지만 이는 단지 한 가지의 도구일 뿐이며, 사람을 완전히 이해할 수 있는 것은 아닙니다.")
+    
+	st.markdown("<span style='font-size:25px;color:white'>🤖인공지능이 당신의 MBTI를 분석해줄거에요!</span>", unsafe_allow_html=True)
+	st.write("<span style='font-size:20px;color:white'>📸 얼굴 정면 사진을 업로드 해주세요! 사진은 저장되지 않습니다!</span>", unsafe_allow_html=True)
+	st.write("<span style='font-size:15px;color:white'>🔮 AI MBTI와 실제 MBTI 간에는 차이가 있을 수 있습니다!</span>", unsafe_allow_html=True)
+
 	uploaded_file = st.file_uploader("PNG 또는 JPG 이미지를 업로드하세요.", type=["png", "jpg", "jpeg"])
 	if uploaded_file is not None:
         # 이미지를 넘파이 배열로 변환
@@ -89,9 +133,15 @@ def main():
 			result=class_names[index][2:].strip()
 			confidence_score = prediction[0][index]
 			with st.spinner('AI가 당신의 MBTI를 분석중입니다...'):
-				time.sleep(3)  # 예시로 3초 동안 로딩 중 표시 (실제 분석으로 대체 필요)
-				st.success(f'MBTI분석을 완료했습니다!\n\n나의 MBTI는? {result} {round(confidence_score*100)}%')
-			tab1,tab2,tab3,tab4=st.tabs(['특징','연애 스타일','추천직업','유명인'])
+				time.sleep(3)
+				with col2:
+					st.success(f'MBTI 분석을 완료했습니다!')
+					st.markdown(f"### 당신의 MBTI는 {result} 입니다!")
+					st.progress(confidence_score)
+					st.write(f"신뢰도: {round(confidence_score*100, 2)}%")
+            
+			tab1, tab2, tab3, tab4 = st.tabs(['특징', '연애 스타일', '추천직업', '유명인'])
+
 			if result=='INFP':
 				with tab1:
 					st.subheader('#열정적인 :blue[*중재자형*]')
@@ -321,12 +371,6 @@ def main():
 			with st.spinner('AI가 당신의 외모를 분석중입니다...'):
 				time.sleep(3)  # 예시로 3초 동안 로딩 중 표시 (실제 분석으로 대체 필요)
 				st.error('얼굴을 감지하지 못했습니다! 다른사진을 이용해주세요!')
-	col1, col2 = st.columns(2)
-	with col1:
-		st.components.v1.html(f"<center>{kakao_ad_code1}</center>", height=250, scrolling=False)
-	with col2:
-		st.components.v1.html(f"<center>{kakao_ad_code2}</center>", height=250, scrolling=False)
-	st.components.v1.html(coupang_ad_code, scrolling=False)
 	st.markdown('<a target="_blank" href="https://icons8.com/icon/7338/%EC%96%BC%EA%B5%B4-%EC%9D%B8%EC%8B%9D-%EC%8A%A4%EC%BA%94">얼굴 인식 스캔</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>', unsafe_allow_html=True)
 if __name__ == "__main__":
     main()
